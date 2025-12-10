@@ -1,0 +1,135 @@
+* {
+  font-family: monospace;
+}
+p,
+h1,
+h3,
+a,
+label,
+legend,
+hr {
+  color: white;
+}
+header > p, label {
+  font-size: 1.2rem;
+}
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  background: linear-gradient(to bottom, rgb(8, 20, 43), rgb(56, 91, 148));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: auto;
+}
+header {
+  align-self: flex-start;
+  margin-left: 1rem;
+}
+#road-lines {
+  z-index: -1;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: max(2%, 2rem);
+  height: 100%;
+  /* Create the yellow markings */
+  background: repeating-linear-gradient(
+    yellow 0%,
+    yellow 10%,
+    transparent 10%,
+    transparent 20%
+  );
+  /* Center the markings */
+  transform: translateX(-50%);
+}
+main {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+form {
+  margin-top: 5%;
+  display: flex;
+  justify-content: space-around;
+}
+.label-input {
+  display: flex;
+  justify-content: space-between;
+}
+input {
+  width: 12rem;
+  width: 12rem;
+  flex-shrink: 0;
+}
+input:focus {
+  outline: 1px solid black;
+}
+fieldset {
+  height: 20rem;
+  width: max(40%, 350px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+label {
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+}
+select {
+  background-color: white;
+  border: 0;
+  border-radius: 5px;
+}
+input,
+select {
+  color: black;
+}
+legend {
+  font-size: 1.5rem;
+}
+button {
+  color: white;
+  background-color: #0092c7;
+  font-size: 1.2rem;
+  border: 3px solid white;
+  border-radius: 5px;
+  height: 4rem;
+  width: 9rem;
+  align-self: center;
+  margin-top: 6rem;
+}
+button:hover {
+  cursor: pointer;
+}
+button:active {
+  background-color: #007099;
+}
+footer {
+  text-align: center;
+}
+@media screen and (max-width: 600px) {
+  form {
+    flex-direction: column;
+    align-items: center;
+  }
+  fieldset {
+    height: 15ren;
+    width: 80%;
+  }
+  .detailed-info {
+    display: none;
+  }
+}

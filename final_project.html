@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driving Form</title>
+    <link rel="stylesheet" href="main_page.css" />
+    <script type="module" src="final_project.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Driving Experience Log</h1>
+      <hr />
+      <p class="distance-info"></p>
+      <p class="detailed-info">
+        You can see more detailed information
+        <b><a href="statistics.html" id="stats-link">here</a></b>
+      </p>
+    </header>
+    <main>
+     <form action="save.php" method="post">
+        <fieldset id="driving-info">
+          <legend>Driving experience information</legend>
+          <div class="label-input">
+            <label for="drivingDateInput">
+              <span>Driving Experience's Date:</span>
+            </label>
+            <input type="date" id="drivingDateInput" required />
+          </div>
+          <div class="label-input">
+            <label for="startTimeInput">
+              <span>Start Time:</span>
+            </label>
+            <input type="time" id="startTimeInput" required />
+          </div>
+          <div class="label-input">
+            <label for="endTimeInput">
+              <span>End Time:</span>
+            </label>
+            <input type="time" id="endTimeInput" required />
+          </div>
+          <div class="label-input">
+            <label for="distanceInput">
+              <span>Distance Covered:</span>
+            </label>
+            <input type="number" id="distanceInput" min="0" required />
+          </div>
+        </fieldset>
+        <fieldset id="driving-conditions">
+          <legend>Driving Conditions</legend>
+          <div class="label-input">
+            <label for="weatherInput">
+              <span>Weather Conditions:</span>
+            </label>
+            <select name="weather" id="weatherInput" required>
+              <option value="">--Select--</option>
+            </select>
+          </div>
+          <div class="label-input">
+            <label for="trafficInput">
+              <span>Traffic Conditions:</span>
+            </label>
+            <select name="traffic" id="trafficInput" required>
+              <option value="">--Select--</option>
+            </select>
+          </div>
+          <div class="label-input">
+            <label for="slipperinessInput">
+              <span>Road Slipperiness:</span>
+            </label>
+            <select name="slipperiness" id="slipperinessInput" required>
+              <option value="">--Select--</option>
+            </select>
+          </div>
+          <div class="label-input">
+            <label for="lightInput">
+              <span>Light Conditions:</span>
+            </label>
+            <select name="light" id="lightInput" required>
+              <option value="">--Select--</option>
+            </select>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Optional Maneuvers</legend>
+          <div id="maneuver-wrapper">
+            <div class="maneuver-row">
+              <select name="maneuvers[]">
+                <option value="">-- Select maneuver (optional) --</option>
+                <option value="parking">Parking</option>
+                <option value="lane_change">Lane Change</option>
+                <option value="roundabout">Roundabout</option>
+                <option value="reverse">Reverse Driving</option>
+                <option value="hill_start">Hill Start</option>
+              </select>
+              <input 
+                type="number"
+                name="quantities[]"
+                min="1"
+                placeholder="Qty (optional)"
+              />
+            </div>
+          </div>
+          <button type="button" id="add-maneuver-btn">Add Another</button>
+        </fieldset>
+      </form>
+      <button id="save-btn">SAVE!</button>
+    </main>
+    <footer>
+      <p id="credits">
+        Website by <b>Luis Markus Torres</b>. All rights reserved.
+      </p>
+      <p>
+        You may contact me via
+        <b><a href="https://www.linkedin.com/in/luismarkustorres/" target="_blank">LinkedIn</a></b>
+      </p>
+    </footer>
+    <div id="road">
+      <div id="road-lines"></div>
+    </div>
+  </body>
+</html>
