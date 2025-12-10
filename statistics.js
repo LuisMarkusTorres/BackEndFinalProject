@@ -1,12 +1,7 @@
-// =========================
-//  READ PHP-INJECTED DATA
-// =========================
-const counts = JSON.parse(countsJSON);
-const entries = JSON.parse(entriesJSON);
+console.log("Counts:", counts);
+console.log("Entries:", entries);
+console.log("Maneuver Totals:", maneuverCounts);
 
-// =========================
-//  LABELS
-// =========================
 const weatherLabels = ["Clear", "Sunny", "Cloudy", "Foggy", "Rainy", "Snowy", "Haily", "Windy"];
 const trafficLabels = ["Sparse", "Medium", "Heavy"];
 const slipperinessLabels = ["Dry", "Damp", "Wet", "Icy"];
@@ -19,35 +14,6 @@ const maneuverLabels = {
     reverse: "Reverse Driving",
     hill_start: "Hill Start"
 };
-
-// =========================
-//  COLLECT MANEUVER COUNTS
-// =========================
-const maneuverCounts = {
-    parking: 0,
-    lane_change: 0,
-    roundabout: 0,
-    reverse: 0,
-    hill_start: 0
-};
-
-entries.forEach(entry => {
-    if (!entry.maneuvers || !entry.quantities) return;
-
-    const m = JSON.parse(entry.maneuvers);
-    const q = JSON.parse(entry.quantities);
-
-    m.forEach((maneuver, index) => {
-        const qty = parseInt(q[index] || 1);
-        if (maneuverCounts[maneuver] !== undefined) {
-            maneuverCounts[maneuver] += qty;
-        }
-    });
-});
-
-// =========================
-//  CHARTING HELPERS
-// =========================
 
 function createPieChart(id, labels, data) {
     new Chart(document.getElementById(id), {
@@ -81,9 +47,6 @@ function createBarChart(id, labels, data) {
     });
 }
 
-// =========================
-//  CREATE ALL MAIN CHARTS
-// =========================
 createPieChart("weather-doughnut-chart", weatherLabels, Object.values(counts.weather));
 createBarChart("weather-bar-chart", weatherLabels, Object.values(counts.weather));
 
@@ -96,19 +59,12 @@ createBarChart("slipperiness-bar-chart", slipperinessLabels, Object.values(count
 createPieChart("light-doughnut-chart", lightLabels, Object.values(counts.light));
 createBarChart("light-bar-chart", lightLabels, Object.values(counts.light));
 
-// =========================
-//  MANEUVER CHARTS
-// =========================
 const maneuverKeys = Object.keys(maneuverCounts);
 const maneuverValues = Object.values(maneuverCounts);
 const maneuverReadable = maneuverKeys.map(k => maneuverLabels[k]);
 
-createPieChart("maneuver-doughnut-chart", maneuverReadable, maneuverValues);
-createBarChart("maneuver-bar-chart", maneuverReadable, maneuverValues);
 
-// =========================
-//  BUILD DATA TABLE
-// =========================
+createBarChart("maneuver-bar-chart", maneuverReadable, maneuverValues);
 
 function getLabel(group, id) {
     const maps = {
@@ -120,22 +76,17 @@ function getLabel(group, id) {
     return maps[group][id] || "Unknown";
 }
 
-function formatManeuvers(row) {
-    if (!row.maneuvers) return "—";
-    const m = JSON.parse(row.maneuvers);
-    const q = JSON.parse(row.quantities);
-    return m.map((name, i) => `${maneuverLabels[name]} (${q[i]})`).join(", ");
-}
-
 function buildTable() {
     const table = document.querySelector("table");
+    if (!table) return;
+
     const tbody = document.createElement("tbody");
 
     entries.forEach(row => {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
-            <td>${row.entry_date}</td>
+            <td>${row.driving_date}</td>
             <td>${row.start_time}</td>
             <td>${row.end_time}</td>
             <td>${row.distance_km} km</td>
@@ -143,7 +94,7 @@ function buildTable() {
             <td>${getLabel("traffic", row.traffic_id)}</td>
             <td>${getLabel("slipperiness", row.slipperiness_id)}</td>
             <td>${getLabel("light", row.light_id)}</td>
-            <td>${formatManeuvers(row)}</td>
+            <td>—</td> <!-- Maneuvers per-entry not stored -->
         `;
 
         tbody.appendChild(tr);
