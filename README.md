@@ -1,6 +1,4 @@
 # BackEndFinalProject
-# Driving Experience Tracker
-
 A web application for logging and analyzing driving experiences with detailed statistics and visual analytics. Built as part of a comprehensive web development course, this project demonstrates modern frontend and backend integration with secure database management.
 
 ## Overview

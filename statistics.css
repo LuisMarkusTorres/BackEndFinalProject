@@ -1,0 +1,548 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #2E8BC0;
+  --secondary-color: #145DA0;
+  --success-color: #28a745;
+  --error-color: #dc3545;
+  --light-bg: #f8f9fa;
+  --border-color: #dee2e6;
+  --text-dark: #333;
+  --text-light: #666;
+  --shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+header {
+  background: white;
+  padding: 2rem 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  color: var(--secondary-color);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+header hr {
+  border: none;
+  border-top: 3px solid var(--primary-color);
+  width: 100px;
+  margin: 1rem auto;
+}
+
+#total-km {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 1rem 0;
+}
+
+.info-btn {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.message {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+header a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+header a:hover {
+  text-decoration: underline;
+}
+
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+section {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+section h2 {
+  color: var(--secondary-color);
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+/* Filter Controls */
+.filter-controls {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--light-bg);
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-controls label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.filter-controls input {
+  padding: 0.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.filter-controls input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.filter-controls button {
+  padding: 0.5rem 1rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.filter-controls button:hover {
+  background: var(--secondary-color);
+}
+
+/* jQuery UI Tabs Styling */
+#stats-tabs {
+  margin-top: 2rem;
+}
+
+#stats-tabs .ui-tabs-nav {
+  background: var(--light-bg);
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 0.5rem;
+}
+
+#stats-tabs .ui-tabs-tab {
+  border: none;
+  background: transparent;
+  margin-right: 0.25rem;
+}
+
+#stats-tabs .ui-tabs-tab a {
+  color: var(--text-dark);
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+}
+
+#stats-tabs .ui-tabs-tab.ui-state-active {
+  background: var(--primary-color);
+  border-radius: 5px;
+}
+
+#stats-tabs .ui-tabs-tab.ui-state-active a {
+  color: white;
+}
+
+#stats-tabs .ui-tabs-panel {
+  padding: 2rem;
+  min-height: 300px;
+}
+
+/* jQuery UI Accordion Styling */
+#conditions-accordion {
+  margin-top: 1rem;
+}
+
+#conditions-accordion .ui-accordion-header {
+  background: var(--light-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-dark);
+  font-weight: 600;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+}
+
+#conditions-accordion .ui-accordion-header.ui-state-active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+#conditions-accordion .ui-accordion-content {
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  border-radius: 0 0 5px 5px;
+}
+
+/* Dialog Styling */
+.ui-dialog {
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.ui-dialog-titlebar {
+  background: var(--primary-color);
+  color: white;
+  border-radius: 10px 10px 0 0;
+  padding: 1rem;
+}
+
+.ui-dialog-title {
+  font-weight: 600;
+}
+
+.ui-dialog-titlebar-close {
+  background: transparent;
+  border: none;
+}
+
+.ui-dialog-content {
+  padding: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.ui-dialog-buttonpane {
+  padding: 1rem;
+  background: var(--light-bg);
+}
+
+.ui-dialog-buttonset button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+#km-details-dialog p {
+  margin: 0.75rem 0;
+  font-size: 1rem;
+}
+
+#km-details-dialog strong {
+  color: var(--secondary-color);
+}
+
+/* Datepicker Customization */
+.ui-datepicker {
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.ui-datepicker-header {
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px 8px 0 0;
+}
+
+.ui-datepicker-today a {
+  background: var(--light-bg);
+  border-color: var(--primary-color);
+}
+
+.ui-state-active {
+  background: var(--primary-color) !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
+}
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+table.display {
+  width: 100% !important;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+table.display thead th {
+  background: var(--secondary-color);
+  color: white;
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+table.display tbody td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+table.display tbody tr:hover {
+  background: var(--light-bg);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-edit, .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+}
+
+.btn-edit {
+  color: var(--primary-color);
+}
+
+.btn-edit:hover {
+  background: rgba(46, 139, 192, 0.1);
+  transform: scale(1.1);
+}
+
+.btn-delete {
+  color: var(--error-color);
+}
+
+.btn-delete:hover {
+  background: rgba(220, 53, 69, 0.1);
+  transform: scale(1.1);
+}
+
+.dataTables_wrapper {
+  padding: 1rem 0;
+}
+
+.dataTables_filter input {
+  padding: 0.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 14px;
+  margin-left: 0.5rem;
+}
+
+.dataTables_filter input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.dataTables_length select {
+  padding: 0.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 14px;
+  margin: 0 0.5rem;
+}
+
+.dataTables_paginate .paginate_button {
+  padding: 0.5rem 1rem;
+  margin: 0 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  cursor: pointer;
+  background: white;
+  color: var(--text-dark) !important;
+}
+
+.dataTables_paginate .paginate_button:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+  border-color: var(--primary-color);
+}
+
+.dataTables_paginate .paginate_button.current {
+  background: var(--primary-color) !important;
+  color: white !important;
+  border-color: var(--primary-color);
+}
+
+.chart-wrapper {
+  width: 400px;
+  height: 400px;
+  margin: 2rem auto;
+  position: relative;
+}
+
+.chart-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+footer {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+  margin-top: 2rem;
+}
+
+footer p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  header {
+    padding: 1.5rem 1rem;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  #total-km {
+    font-size: 1.3rem;
+  }
+
+  section {
+    padding: 1.25rem;
+  }
+
+  section h2 {
+    font-size: 1.5rem;
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-controls input,
+  .filter-controls button {
+    width: 100%;
+  }
+
+  #stats-tabs .ui-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  #stats-tabs .ui-tabs-tab {
+    flex: 1;
+    min-width: 45%;
+  }
+
+  .message {
+    font-size: 1rem;
+  }
+
+  table.display {
+    font-size: 15px;
+    line-height: 1.5;
+    min-width: 900px;
+  }
+
+  table.display thead th {
+    font-size: 15px;
+    padding: 0.75rem 0.75rem;
+  }
+
+  table.display tbody td {
+    font-size: 15px;
+    padding: 0.75rem 0.75rem;
+  }
+
+  .table-container {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+
+  .dataTables_filter,
+  .dataTables_length,
+  .dataTables_info,
+  .dataTables_paginate {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .dataTables_filter input,
+  .dataTables_length select {
+    font-size: 1rem;
+    padding: 0.6rem;
+  }
+
+  .action-buttons {
+    gap: 0.75rem;
+  }
+
+  .btn-edit,
+  .btn-delete {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  .chart-wrapper {
+    max-width: 280px;
+    max-height: 280px;
+  }
+
+  footer {
+    font-size: 0.95rem;
+  }
+
+  .ui-dialog {
+    width: 90% !important;
+    max-width: 400px;
+  }
+}
