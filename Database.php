@@ -1,55 +1,51 @@
 <?php
-class Database {
+
+class Database
+{
     private $pdo;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
+        $dsn = 'mysql:host=' . DB_SERVER . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+        
         try {
-            $this->pdo = new PDO(
-                "mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";charset=utf8",
-                DB_USERNAME,
-                DB_PASSWORD,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                ]
-            );
+            $this->pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
         } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
+            die("Database connection failed: " . $e->getMessage());
         }
     }
-    
-    public function getConnection() {
-        return $this->pdo;
+
+    public function query(string $sql, array $params = []): bool
+    {
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
     }
-    
-    public function query($sql, $params = []) {
+
+    public function fetchAll(string $sql, array $params = []): array
+    {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
-        return $stmt;
+        return $stmt->fetchAll();
     }
-    
-    public function fetchAll($sql, $params = []) {
-        return $this->query($sql, $params)->fetchAll();
+
+    public function fetchOne(string $sql, array $params = [])
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetch();
     }
-    
-    public function fetchOne($sql, $params = []) {
-        return $this->query($sql, $params)->fetch();
-    }
-    
-    public function lastInsertId() {
+
+    public function lastInsertId(): string
+    {
         return $this->pdo->lastInsertId();
     }
+
+    public function getPdo(): PDO
+    {
+        return $this->pdo;
+    }
 }
-?>
-
-# Install git-filter-repo
-apt-get install git-filter-repo
-
-# In your repository
-cd ~/Desktop/coding/ufaz/final_project_new
-
-# Remove config.php from history
-git filter-repo --path config.php --invert-paths
-
-# Force push
-git push origin --force --all

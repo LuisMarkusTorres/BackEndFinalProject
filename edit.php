@@ -22,30 +22,11 @@ if (!$experience->loadById($id)) {
     exit();
 }
 
-// Options for dropdowns (same as index.php)
-$weatherOptions = [
-    ['id' => 0, 'name' => 'Clear'], ['id' => 1, 'name' => 'Sunny'],
-    ['id' => 2, 'name' => 'Cloudy'], ['id' => 3, 'name' => 'Foggy'],
-    ['id' => 4, 'name' => 'Rainy'], ['id' => 5, 'name' => 'Snowy'],
-    ['id' => 6, 'name' => 'Haily'], ['id' => 7, 'name' => 'Windy']
-];
-
-$trafficOptions = [
-    ['id' => 0, 'name' => 'Sparse'],
-    ['id' => 1, 'name' => 'Medium'],
-    ['id' => 2, 'name' => 'Heavy']
-];
-
-$slipperinessOptions = [
-    ['id' => 0, 'name' => 'Dry'], ['id' => 1, 'name' => 'Damp'],
-    ['id' => 2, 'name' => 'Wet'], ['id' => 3, 'name' => 'Icy']
-];
-
-$lightOptions = [
-    ['id' => 0, 'name' => 'Low'],
-    ['id' => 1, 'name' => 'Medium'],
-    ['id' => 2, 'name' => 'Bright']
-];
+// Fetch dropdown options from lookup tables using JOIN-based methods
+$weatherOptions = DrivingExperience::getWeatherConditions($db);
+$trafficOptions = DrivingExperience::getTrafficLevels($db);
+$slipperinessOptions = DrivingExperience::getRoadConditions($db);
+$lightOptions = DrivingExperience::getLightConditions($db);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -177,20 +158,24 @@ $lightOptions = [
                             <input type="number" name="quantities[]" min="1" placeholder="Qty (optional)" />
                         </div>
                     <?php else: ?>
-                        <?php foreach ($experience->maneuvers as $maneuver): ?>
+                        <?php 
+                        for ($i = 0; $i < count($experience->maneuvers); $i++):
+                            $maneuverName = $experience->maneuvers[$i];
+                            $quantity = $experience->quantities[$i] ?? 1;
+                        ?>
                             <div class="maneuver-row">
                                 <select name="maneuvers[]">
                                     <option value="">-- Select maneuver (optional) --</option>
-                                    <option value="parking" <?= $maneuver['name'] == 'parking' ? 'selected' : '' ?>>Parking</option>
-                                    <option value="lane_change" <?= $maneuver['name'] == 'lane_change' ? 'selected' : '' ?>>Lane Change</option>
-                                    <option value="roundabout" <?= $maneuver['name'] == 'roundabout' ? 'selected' : '' ?>>Roundabout</option>
-                                    <option value="reverse" <?= $maneuver['name'] == 'reverse' ? 'selected' : '' ?>>Reverse Driving</option>
-                                    <option value="hill_start" <?= $maneuver['name'] == 'hill_start' ? 'selected' : '' ?>>Hill Start</option>
+                                    <option value="parking" <?= $maneuverName == 'parking' ? 'selected' : '' ?>>Parking</option>
+                                    <option value="lane_change" <?= $maneuverName == 'lane_change' ? 'selected' : '' ?>>Lane Change</option>
+                                    <option value="roundabout" <?= $maneuverName == 'roundabout' ? 'selected' : '' ?>>Roundabout</option>
+                                    <option value="reverse" <?= $maneuverName == 'reverse' ? 'selected' : '' ?>>Reverse Driving</option>
+                                    <option value="hill_start" <?= $maneuverName == 'hill_start' ? 'selected' : '' ?>>Hill Start</option>
                                 </select>
-                                <input type="number" name="quantities[]" value="<?= $maneuver['quantity'] ?>" min="1" placeholder="Qty (optional)" />
+                                <input type="number" name="quantities[]" value="<?= $quantity ?>" min="1" placeholder="Qty (optional)" />
                                 <button type="button" class="remove-maneuver">X</button>
                             </div>
-                        <?php endforeach; ?>
+                        <?php endfor; ?>
                     <?php endif; ?>
                 </div>
                 <button type="button" id="add-maneuver-btn">Add Another Maneuver</button>

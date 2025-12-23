@@ -86,7 +86,16 @@ function createBarChart(id, labels, data) {
   });
 }
 
-function getLabel(group, id) {
+function getLabel(group, id, row) {
+  // If row has the name from JOIN, use it directly
+  if (row) {
+    if (group === 'weather' && row.weather_name) return row.weather_name;
+    if (group === 'traffic' && row.traffic_name) return row.traffic_name;
+    if (group === 'slipperiness' && row.slipperiness_name) return row.slipperiness_name;
+    if (group === 'light' && row.light_name) return row.light_name;
+  }
+  
+  // Fallback to mapping (for backwards compatibility)
   const maps = {
     weather: weatherLabels,
     traffic: trafficLabels,
@@ -224,10 +233,10 @@ $(document).ready(function () {
       row.start_time,
       row.end_time,
       row.distance_km + " km",
-      getLabel("weather", row.weather_id),
-      getLabel("traffic", row.traffic_id),
-      getLabel("slipperiness", row.slipperiness_id),
-      getLabel("light", row.light_id),
+      row.weather_name || getLabel("weather", row.weather_id, row),
+      row.traffic_name || getLabel("traffic", row.traffic_id, row),
+      row.slipperiness_name || getLabel("slipperiness", row.slipperiness_id, row),
+      row.light_name || getLabel("light", row.light_id, row),
       formatManeuvers(row),
       `
       <div class="action-buttons">

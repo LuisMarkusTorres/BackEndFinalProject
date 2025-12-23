@@ -50,21 +50,20 @@ class DrivingExperience
     }
 
     private function normalizeManeuvers(): void
-{
-    $names = [];
-    $quantities = [];
+    {
+        $names = [];
+        $quantities = [];
 
-    foreach ($this->maneuvers as $m) {
-        if (!empty($m['name']) && (int)$m['quantity'] > 0) {
-            $names[] = $m['name'];
-            $quantities[] = (int)$m['quantity'];
+        foreach ($this->maneuvers as $m) {
+            if (!empty($m['name']) && (int)$m['quantity'] > 0) {
+                $names[] = $m['name'];
+                $quantities[] = (int)$m['quantity'];
+            }
         }
+
+        $this->maneuvers  = $names;
+        $this->quantities = $quantities;
     }
-
-    $this->maneuvers  = $names;
-    $this->quantities = $quantities;
-}
-
 
     public function save(): array
     {
@@ -183,14 +182,105 @@ class DrivingExperience
         return true;
     }
 
+    /**
+     * Get all driving experiences with JOIN statements to fetch condition names
+     * This retrieves the actual names instead of just IDs
+     */
     public static function getAll(Database $db): array
     {
         $sql = "
-            SELECT *
-            FROM driving_experiences
-            ORDER BY entry_date DESC, start_time DESC
+            SELECT 
+                de.id,
+                de.entry_date,
+                de.start_time,
+                de.end_time,
+                de.distance_km,
+                de.weather_id,
+                wc.name as weather_name,
+                de.traffic_id,
+                tl.name as traffic_name,
+                de.slipperiness_id,
+                rc.name as slipperiness_name,
+                de.light_id,
+                lc.name as light_name,
+                de.maneuvers,
+                de.quantities,
+                de.created_at,
+                de.updated_at
+            FROM driving_experiences de
+            INNER JOIN weather_conditions wc ON de.weather_id = wc.id
+            INNER JOIN traffic_levels tl ON de.traffic_id = tl.id
+            INNER JOIN road_conditions rc ON de.slipperiness_id = rc.id
+            INNER JOIN light_conditions lc ON de.light_id = lc.id
+            ORDER BY de.entry_date DESC, de.start_time DESC
         ";
 
         return $db->fetchAll($sql);
+    }
+
+    /**
+     * Get a single driving experience with all condition names using JOINs
+     */
+    public static function getByIdWithNames(Database $db, int $id): ?array
+    {
+        $sql = "
+            SELECT 
+                de.id,
+                de.entry_date,
+                de.start_time,
+                de.end_time,
+                de.distance_km,
+                de.weather_id,
+                wc.name as weather_name,
+                de.traffic_id,
+                tl.name as traffic_name,
+                de.slipperiness_id,
+                rc.name as slipperiness_name,
+                de.light_id,
+                lc.name as light_name,
+                de.maneuvers,
+                de.quantities
+            FROM driving_experiences de
+            INNER JOIN weather_conditions wc ON de.weather_id = wc.id
+            INNER JOIN traffic_levels tl ON de.traffic_id = tl.id
+            INNER JOIN road_conditions rc ON de.slipperiness_id = rc.id
+            INNER JOIN light_conditions lc ON de.light_id = lc.id
+            WHERE de.id = :id
+        ";
+
+        $result = $db->fetchOne($sql, [':id' => $id]);
+        return $result ?: null;
+    }
+
+    /**
+     * Get weather conditions from lookup table
+     */
+    public static function getWeatherConditions(Database $db): array
+    {
+        return $db->fetchAll("SELECT id, name, description FROM weather_conditions ORDER BY id");
+    }
+
+    /**
+     * Get traffic levels from lookup table
+     */
+    public static function getTrafficLevels(Database $db): array
+    {
+        return $db->fetchAll("SELECT id, name, description FROM traffic_levels ORDER BY id");
+    }
+
+    /**
+     * Get road conditions from lookup table
+     */
+    public static function getRoadConditions(Database $db): array
+    {
+        return $db->fetchAll("SELECT id, name, description FROM road_conditions ORDER BY id");
+    }
+
+    /**
+     * Get light conditions from lookup table
+     */
+    public static function getLightConditions(Database $db): array
+    {
+        return $db->fetchAll("SELECT id, name, description FROM light_conditions ORDER BY id");
     }
 }

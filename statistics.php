@@ -5,22 +5,12 @@ require_once 'DrivingExperience.php';
 
 $db = new Database();
 
-/**
- * Fetch all driving experiences
- * MUST query: driving_experiences (plural)
- */
 $entries = DrivingExperience::getAll($db);
 
-/**
- * Init session storage for anonymous codes
- */
 if (!isset($_SESSION['experience_codes'])) {
     $_SESSION['experience_codes'] = [];
 }
 
-/**
- * Generate anonymous codes (stable per session)
- */
 foreach ($entries as $entry) {
     if (!in_array($entry['id'], $_SESSION['experience_codes'], true)) {
         $code = bin2hex(random_bytes(8));
@@ -28,48 +18,53 @@ foreach ($entries as $entry) {
     }
 }
 
-/**
- * Main category counts
- */
 $counts = [
-    'weather'       => array_fill(0, 8, 0),
-    'traffic'       => array_fill(0, 3, 0),
-    'slipperiness'  => array_fill(0, 4, 0),
-    'light'         => array_fill(0, 3, 0),
+    'weather'       => [],
+    'traffic'       => [],
+    'slipperiness'  => [],
+    'light'         => [],
 ];
 
-/**
- * Maneuver counts (dynamic keys)
- */
 $maneuverCounts = [];
 
 $totalKm = 0.0;
 
-/**
- * Aggregate statistics
- */
 foreach ($entries as $exp) {
-    // Defensive checks (avoid notices)
+    // Count by ID (IDs now start from 1, not 0)
     if (isset($exp['weather_id'])) {
-        $counts['weather'][(int)$exp['weather_id']]++;
+        $weatherId = (int)$exp['weather_id'];
+        if (!isset($counts['weather'][$weatherId])) {
+            $counts['weather'][$weatherId] = 0;
+        }
+        $counts['weather'][$weatherId]++;
     }
+    
     if (isset($exp['traffic_id'])) {
-        $counts['traffic'][(int)$exp['traffic_id']]++;
+        $trafficId = (int)$exp['traffic_id'];
+        if (!isset($counts['traffic'][$trafficId])) {
+            $counts['traffic'][$trafficId] = 0;
+        }
+        $counts['traffic'][$trafficId]++;
     }
+    
     if (isset($exp['slipperiness_id'])) {
-        $counts['slipperiness'][(int)$exp['slipperiness_id']]++;
+        $slipId = (int)$exp['slipperiness_id'];
+        if (!isset($counts['slipperiness'][$slipId])) {
+            $counts['slipperiness'][$slipId] = 0;
+        }
+        $counts['slipperiness'][$slipId]++;
     }
+    
     if (isset($exp['light_id'])) {
-        $counts['light'][(int)$exp['light_id']]++;
+        $lightId = (int)$exp['light_id'];
+        if (!isset($counts['light'][$lightId])) {
+            $counts['light'][$lightId] = 0;
+        }
+        $counts['light'][$lightId]++;
     }
 
     $totalKm += (float)$exp['distance_km'];
 
-    /**
-     * Maneuvers parsing
-     * maneuvers   = "parking,lane_change"
-     * quantities  = "3,5"
-     */
     if (!empty($exp['maneuvers']) && !empty($exp['quantities'])) {
         $maneuvers  = array_map('trim', explode(',', $exp['maneuvers']));
         $quantities = array_map('trim', explode(',', $exp['quantities']));
@@ -86,15 +81,42 @@ foreach ($entries as $exp) {
 }
 
 /**
- * JSON for JS
+ * Convert counts to ordered arrays for JavaScript
+ * Weather IDs: 1-8 (Clear, Sunny, Cloudy, Foggy, Rainy, Snowy, Haily, Windy)
+ * Traffic IDs: 1-3 (Sparse, Medium, Heavy)
+ * Slipperiness IDs: 1-4 (Dry, Damp, Wet, Icy)
+ * Light IDs: 1-3 (Low, Medium, Bright)
  */
-$countsJSON     = json_encode($counts, JSON_THROW_ON_ERROR);
+$weatherArray = [];
+for ($i = 1; $i <= 8; $i++) {
+    $weatherArray[] = $counts['weather'][$i] ?? 0;
+}
+
+$trafficArray = [];
+for ($i = 1; $i <= 3; $i++) {
+    $trafficArray[] = $counts['traffic'][$i] ?? 0;
+}
+
+$slipperinessArray = [];
+for ($i = 1; $i <= 4; $i++) {
+    $slipperinessArray[] = $counts['slipperiness'][$i] ?? 0;
+}
+
+$lightArray = [];
+for ($i = 1; $i <= 3; $i++) {
+    $lightArray[] = $counts['light'][$i] ?? 0;
+}
+
+$countsJSON = json_encode([
+    'weather' => $weatherArray,
+    'traffic' => $trafficArray,
+    'slipperiness' => $slipperinessArray,
+    'light' => $lightArray
+], JSON_THROW_ON_ERROR);
+
 $entriesJSON    = json_encode($entries, JSON_THROW_ON_ERROR);
 $maneuverJSON   = json_encode($maneuverCounts, JSON_THROW_ON_ERROR);
 
-/**
- * Flash messages
- */
 $successMessage = '';
 if (isset($_GET['updated'])) {
     $successMessage = '✅ Driving experience updated successfully!';

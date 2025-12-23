@@ -26,7 +26,6 @@ $(document).ready(function() {
   }
 });
 
-// Vanilla JavaScript for form validation and interactions
 const form = document.querySelector("form");
 const saveBtn = document.getElementById("save-btn");
 const distanceInfoPara = document.querySelector(".distance-info");
@@ -67,12 +66,10 @@ saveBtn.addEventListener("click", (event) => {
     return;
   }
 
-  // If everything is correct, submit the form
   showMessage("Saving your driving experience... 🚗");
   form.submit();
 });
 
-// Add maneuver functionality
 document.getElementById("add-maneuver-btn").addEventListener("click", () => {
   const wrapper = document.getElementById("maneuver-wrapper");
   const newRow = document.createElement("div");
@@ -91,13 +88,11 @@ document.getElementById("add-maneuver-btn").addEventListener("click", () => {
   `;
   wrapper.appendChild(newRow);
 
-  // Add remove functionality to the new row
   newRow.querySelector(".remove-maneuver").addEventListener("click", () => {
     newRow.remove();
   });
 });
 
-// Add remove functionality to existing maneuver rows (for edit page)
 document.addEventListener("DOMContentLoaded", () => {
   const existingRemoveButtons = document.querySelectorAll(".remove-maneuver");
   existingRemoveButtons.forEach(button => {
